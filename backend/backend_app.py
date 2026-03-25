@@ -22,6 +22,12 @@ def validate_post_data(post_data: dict[str, str]) -> bool:
     return True
 
 
+def find_post_by_id(post_id: int):
+    return next(
+        (post for post in POSTS if post["id"] == post_id), None
+    )
+
+
 @app.route("/api/posts", methods=["GET"])
 def get_posts():
     return jsonify(POSTS)
@@ -37,6 +43,19 @@ def add_post():
     new_post["id"] = get_new_id()
     POSTS.append(new_post)
     return jsonify(new_post), 201
+
+
+@app.route("/api/posts/<int:post_id>", methods=["DELETE"])
+def delete_post(post_id):
+    post_to_delete = find_post_by_id(post_id)
+    if post_to_delete is None:
+        return jsonify(
+            {"error": f"Post with id {post_id} was not found."}
+        ), 404
+    POSTS.remove(post_to_delete)
+    return jsonify(
+        {"message": f"Post with id {post_id} has been deleted successfully."}
+    )
 
 
 if __name__ == "__main__":
