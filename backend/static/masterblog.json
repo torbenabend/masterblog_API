@@ -1,0 +1,191 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "Masterblog API",
+    "version": "1.0.0"
+  },
+  "servers": [{ "url": "http://localhost:5001" }],
+  "tags": [{ "name": "Post", "description": "Post API - CRUD" }],
+  "paths": {
+    "/api/posts": {
+      "get": {
+        "summary": "Returns all posts",
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Post"
+        ],
+        "parameters": [
+          {
+            "name": "sort",
+            "in": "query",
+            "type": "string",
+            "required": false,
+            "description": "Field to sort by (title or content)"
+          },
+          {
+            "name": "direction",
+            "in": "query",
+            "type": "string",
+            "required": false,
+            "description": "Sort direction: asc (for ascending) or desc (for descending)"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful operation"
+          },
+          "400": {
+            "description": "Invalid parameter values for sorting"
+          }
+        }
+      },
+      "post": {
+        "summary": "Add new post",
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Post"
+        ],
+        "parameters": [
+          {
+            "name": "post_data",
+            "in": "body",
+            "required": true,
+            "description": "Post data to be added",
+            "schema": {
+              "type": "object",
+              "required": [
+                "title",
+                "content"
+              ],
+              "properties": {
+                "title": {
+                  "type": "string",
+                  "example": "My first post"
+                },
+                "content": {
+                  "type": "string",
+                  "example": "This is the content"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Added new post"
+          },
+          "400": {
+            "description": "Invalid post data: 'title' or 'content' missing"
+          }
+        }
+      }
+    },
+    "/api/posts/{post_id}": {
+      "delete": {
+        "summary": "Delete post by id",
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Post"
+        ],
+        "parameters": [{
+          "name": "post_id",
+          "in": "path",
+          "required": true,
+          "type": "integer",
+          "description": "ID of the post to delete"
+        }
+        ],
+        "responses": {
+          "200": {
+            "description": "Post successfully deleted"
+          },
+          "404": {
+            "description": "Post not found"
+          }
+        }
+      },
+      "put": {
+        "summary": "Update post by id",
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Post"
+        ],
+        "parameters": [{
+          "name": "post_id",
+          "in": "path",
+          "required": true,
+          "type": "integer",
+          "description": "ID of the post to update"
+        },
+        {
+          "name": "new_post_data",
+          "in": "body",
+          "required": false,
+          "description": "New post data",
+          "schema": {
+            "type": "object",
+            "properties": {
+              "title": {
+                "type": "string",
+                "example": "Updated title"
+              },
+              "content": {
+                "type": "string",
+                "example": "This is the updated content"
+              }
+            }
+          }
+        }
+        ],
+        "responses": {
+          "200": {
+            "description": "Post successfully updated"
+          },
+          "404": {
+            "description": "Post not found"
+          }
+        }
+      }
+    },
+    "/api/posts/search": {
+      "get": {
+        "summary": "Search posts by title and/or content",
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Post"
+        ],
+        "parameters": [
+          {
+            "name": "title",
+            "in": "query",
+            "type": "string",
+            "required": false,
+            "description": "Substring to search for in post titles"
+          },
+          {
+            "name": "content",
+            "in": "query",
+            "type": "string",
+            "required": false,
+            "description": "Substring to search for in post content"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful operation"
+          }
+        }
+      }
+    }
+  }
+}
