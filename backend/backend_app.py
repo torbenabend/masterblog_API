@@ -30,6 +30,19 @@ def find_post_by_id(post_id: int):
 
 @app.route("/api/posts", methods=["GET"])
 def get_posts():
+    sort_by = request.args.get("sort")
+    sort_direction = request.args.get("direction")
+    if sort_by is not None or sort_direction is not None:
+        if (sort_by in ["title", "content"] and
+                sort_direction in ["asc", "desc"]):
+            reverse = sort_direction == "desc"
+            sorted_posts = sorted(
+                POSTS, key=lambda post: post[sort_by].lower(), reverse=reverse
+            )
+            return jsonify(sorted_posts)
+        else:
+            return (jsonify({"error": "Invalid parameter values for sorting"}),
+                    400)
     return jsonify(POSTS)
 
 
